@@ -10,7 +10,7 @@ class Runner:
         self.args = args
 
     def run(self, ip):
-        command = ["python", self.path, ip, *self.args]
+        command = [self.path, ip, *self.args]
         process = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
