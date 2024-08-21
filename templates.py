@@ -1,11 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 import sys
 
 
 def arg_reciever():
     argv = sys.argv
     host = argv[1]
-    args = argv[2:]
+    submit_host = argv[2]
+    args = argv[3:]
     return host, args
 
 

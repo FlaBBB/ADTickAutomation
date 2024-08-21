@@ -9,8 +9,10 @@ class Runner:
         self.path = path
         self.args = args
 
-    def run(self, ip):
-        command = [self.path, ip, *self.args]
+    def run(self, servers):
+        ip = servers["ip"]
+        submit_ip = servers["submit"]
+        command = [self.path, ip, submit_ip, *self.args]
         process = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )

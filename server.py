@@ -14,12 +14,12 @@ runners: List[Runner] = []
 app = Flask(__name__)
 
 
-def runners_workers(round_time: int, ips: List[str]):
+def runners_workers(round_time: int, servers: List[str]):
     while True:
         log.info("Starting new round")
-        for ip in ips:
+        for server in servers:
             for runner in runners:
-                threading.Thread(target=runner.run, args=(ip,)).start()
+                threading.Thread(target=runner.run, args=(server,)).start()
         time.sleep(round_time)
 
 
@@ -67,9 +67,9 @@ if __name__ == "__main__":
         "--round-time", type=int, help="Time to run each runner", required=True
     )
     parser.add_argument(
-        "--base-ips",
+        "servers",
         type=str,
-        help="Path of JSON file containing base IPs",
+        help="Path of JSON file containing base servers",
         required=True,
     )
     args = parser.parse_args()
@@ -77,9 +77,9 @@ if __name__ == "__main__":
     host = args.host
     port = args.port
     round_time = args.round_time
-    ips = json.load(open(args.base_ips))
+    servers = json.load(open(args.servers))
 
-    threading.Thread(target=runners_workers, args=(round_time, ips)).start()
+    threading.Thread(target=runners_workers, args=(round_time, servers)).start()
 
     log.info(f"Server started on {host}:{port}")
 
