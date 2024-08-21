@@ -7,9 +7,9 @@ def arg_reciever():
     host = argv[1]
     submit_host = argv[2]
     args = argv[3:]
-    return host, args
+    return host, submit_host, args
 
 
-HOST, args = arg_reciever()
+HOST, submit_host, args = arg_reciever()
 
 # rest of the code
