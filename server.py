@@ -7,17 +7,20 @@ from typing import List
 from flask import Flask, request
 from pwn import log
 
+from core import Submitter
 from core.Runner import Runner
+from core.TargetPool import TargetPool
 
 runners: List[Runner] = []
+submitter: Submitter = Submitter()
 
 app = Flask(__name__)
 
 
-def runners_workers(round_time: int, servers: List[str]):
+def runners_workers(round_time: int, targets: TargetPool):
     while True:
         log.info("Starting new round")
-        for server in servers:
+        for server in targets:
             for runner in runners:
                 threading.Thread(target=runner.run, args=(server,)).start()
         time.sleep(round_time)
@@ -28,7 +31,7 @@ def new_runner():
     name = request.json["name"]
     path = request.json["path"]
     args = request.json["args"]
-    runner = Runner(name, path, args)
+    runner = Runner(name, path, submitter, args)
     runners.append(runner)
     return "Runner created"
 
@@ -67,9 +70,9 @@ if __name__ == "__main__":
         "--round-time", type=int, help="Time to run each runner", required=True
     )
     parser.add_argument(
-        "servers",
+        "targets",
         type=str,
-        help="Path of JSON file containing base servers",
+        help="Path of JSON file containing base targets",
         required=True,
     )
     args = parser.parse_args()
@@ -77,9 +80,9 @@ if __name__ == "__main__":
     host = args.host
     port = args.port
     round_time = args.round_time
-    servers = json.load(open(args.servers))
+    targets = TargetPool(args.targets)
 
-    threading.Thread(target=runners_workers, args=(round_time, servers)).start()
+    threading.Thread(target=runners_workers, args=(round_time, targets)).start()
 
     log.info(f"Server started on {host}:{port}")
 
