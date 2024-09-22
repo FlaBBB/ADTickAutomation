@@ -29,7 +29,7 @@ def list_runners():
 
 
 def delete_runner(parser: argparse.ArgumentParser):
-    parser.add_argument("--idx", type=int, help="Index of the runner to delete")
+    parser.add_argument("--idx", type=str, help="Index of the runner to delete")
     parser.add_argument("--name", type=str, help="Name of the runner to delete")
 
     args = parser.parse_args()

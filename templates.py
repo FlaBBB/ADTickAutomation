@@ -5,11 +5,10 @@ import sys
 def arg_reciever():
     argv = sys.argv
     host = argv[1]
-    submit_host = argv[2]
-    args = argv[3:]
-    return host, submit_host, args
+    args = argv[2:]
+    return host, args
 
 
-HOST, submit_host, args = arg_reciever()
+HOST, args = arg_reciever()
 
 # rest of the code

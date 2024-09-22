@@ -21,18 +21,18 @@ class Runner:
         stdout, stderr = process.communicate()
         if stderr:
             stderr = stderr.decode().strip()
-            log.error(f"Error in {self.name} on {target.host}: {stderr}")
+            log.warn(f"Error in {self.name} on {target.host}: {stderr}")
             return
 
         result = stdout.decode().strip()
         
         flag = self.submitter.validate_and_get_flag(result)
         if not flag:
-            log.error(f"Vailed to get lag in {self.name} on {target.host}")
+            log.warn(f"Vailed to get lag in {self.name} on {target.host}")
             return
         
         submit_result = self.submitter.submit(flag)
         if submit_result:
             log.success(f"Flag submitted for {self.name} on {target.host} with flag {flag}")
         else:
-            log.error(f"Failed to submit flag for {self.name} on {target.host}")
+            log.warn(f"Failed to submit flag for {self.name} on {target.host}")
