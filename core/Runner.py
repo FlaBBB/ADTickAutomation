@@ -14,7 +14,7 @@ class Runner:
         self.submitter: Submitter = submitter
 
     def run(self, target: Target):
-        command = [self.path, target.host, *self.args]
+        command = ['python', self.path, target.host, *self.args]
         process = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )

@@ -1,8 +1,7 @@
 import json
 
-from pwn import log
-
 from core.Target import Target
+from pwn import log
 
 
 class TargetPool:

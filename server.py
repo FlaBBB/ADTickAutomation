@@ -4,18 +4,20 @@ import threading
 import time
 from typing import List
 
+from core.Runner import Runner
+from core.Submitter import Submitter
+from core.TargetPool import TargetPool
 from flask import Flask, request
 from pwn import log
-
-from core import Submitter
-from core.Runner import Runner
-from core.TargetPool import TargetPool
 
 runners: List[Runner] = []
 submitter: Submitter = Submitter()
 
 app = Flask(__name__)
 
+def run_runners(runner):
+    for server in targets:
+        threading.Thread(target=runner.run, args=(server,)).start()
 
 def runners_workers(round_time: int, targets: TargetPool):
     while True:
@@ -32,6 +34,7 @@ def new_runner():
     path = request.json["path"]
     args = request.json["args"]
     runner = Runner(name, path, submitter, args)
+    run_runners(runner)
     runners.append(runner)
     return "Runner created"
 
@@ -72,15 +75,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "targets",
         type=str,
-        help="Path of JSON file containing base targets",
-        required=True,
+        help="Path of JSON file containing base targets"
     )
     args = parser.parse_args()
 
     host = args.host
     port = args.port
     round_time = args.round_time
-    targets = TargetPool(args.targets)
+    targets = TargetPool.parse_json(args.targets)
 
     threading.Thread(target=runners_workers, args=(round_time, targets)).start()
 
